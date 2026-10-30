@@ -122,7 +122,7 @@ footer{margin-top:40px;display:flex;justify-content:space-between;gap:12px;flex-
 <div class="wrap">
   <header class="top">
     <div>
-      <div class="eyebrow">Pre-opening · Kitchen snagging</div>
+      <div class="eyebrow" id="eyebrow">Pre-opening · Snagging</div>
       <h1 id="title">Kitchen snagging</h1>
       <div class="asof" id="asof"></div>
     </div>
@@ -171,7 +171,7 @@ footer{margin-top:40px;display:flex;justify-content:space-between;gap:12px;flex-
   </form>
 
   <footer>
-    <span>Fotografije i status ažurira Executive Chef.</span>
+    <span>Fotografije i status ažurira Executive Chef · <a class="link" href="https://djordje21.github.io/SNAGG/">Kuhinje</a> · <a class="link" href="https://djordje21.github.io/SNAGG/minus3/">Minus 3</a></span>
     <span><button type="button" class="link" id="editToggle">Uredi</button></span>
   </footer>
 </div>
@@ -185,8 +185,10 @@ footer{margin-top:40px;display:flex;justify-content:space-between;gap:12px;flex-
 
 <script>
 const REPO = { owner:"djordje21", repo:"SNAGG", branch:"main" };
-const RAW = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.repo}/${REPO.branch}/`;
-const API = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/`;
+// Each list lives in its own folder (root = kitchens, minus3/ = Minus 3); paths below are relative to it
+const BASE = document.documentElement.dataset.base || "";
+const RAW = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.repo}/${REPO.branch}/${BASE}`;
+const API = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/${BASE}`;
 const TOKEN_KEY = "snagg-token";
 
 let data = null, dataSha = null, token = null, editing = false, filter = "all";
@@ -255,7 +257,9 @@ const photoSrc = p => localUrls[p] || (editing ? RAW + p : p);
 
 function renderAsof(){
   if (!data) return;
-  $("#title").textContent = data.title || "Kitchen snagging";
+  $("#title").textContent = data.title || "Snagging";
+  if (data.eyebrow) $("#eyebrow").textContent = data.eyebrow;
+  document.title = data.short || data.title || "Snagging";
   const d = new Date(data.updated);
   $("#asof").textContent = isNaN(d) ? "" : "Stanje na: " + d.toLocaleString("sr-Latn-RS",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
 }
@@ -537,7 +541,7 @@ async function exportExcel(){
     const buf = await wb.xlsx.writeBuffer();
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([buf], { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
-    a.download = `Kitchen-Snagging-${new Date().toISOString().slice(0,10)}.xlsx`;
+    a.download = `${(data.short || "Snagging").replace(/[^A-Za-z0-9]+/g,"-")}-${new Date().toISOString().slice(0,10)}.xlsx`;
     document.body.appendChild(a); a.click(); a.remove();
   }catch(e){ alert("Excel nije napravljen. Proveri internet vezu i pokušaj ponovo."); }
   finally{ btn.disabled = false; btn.textContent = "Excel ↓"; }
