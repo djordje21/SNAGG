@@ -1,0 +1,57 @@
+{
+  "title": "AC Hotel Belgrade Airport City — kuhinje",
+  "updated": "2026-10-30T09:00:00Z",
+  "areas": [
+    { "id": "lounge", "code": "LG", "name": "AC Lounge Kitchen", "items": [
+      { "id": "lg-01", "text": "Vrata nemaju kvaku", "done": false, "photos": [] },
+      { "id": "lg-02", "text": "Izgrebana vrata na visećem delu", "done": false, "photos": [] },
+      { "id": "lg-03", "text": "Očistiti ćošak iza vrata", "done": false, "photos": [] },
+      { "id": "lg-04", "text": "Sudomašina – za šta je ovo crevo", "done": false, "photos": [] },
+      { "id": "lg-05", "text": "Tačke od jake hemije po inox policama i nogarama od sudopere", "done": false, "photos": [] },
+      { "id": "lg-06", "text": "Oštećenje na štoku od vrata", "done": false, "photos": [] },
+      { "id": "lg-07", "text": "Plafonske ploče namestiti", "done": false, "photos": [] }
+    ]},
+    { "id": "avenue", "code": "AV", "name": "AVENUE Kitchen", "items": [
+      { "id": "av-01", "text": "Očistiti kancelariju", "done": false, "photos": [] },
+      { "id": "av-02", "text": "Nema struje u kancelariji", "done": false, "photos": [] },
+      { "id": "av-03", "text": "Salamander nema struju", "done": false, "photos": [] },
+      { "id": "av-04", "text": "Česma na termobloku curi na spojevima", "done": false, "photos": [] },
+      { "id": "av-05", "text": "Hobart konvekciona rerna velika – curi voda, proveriti odvod/dovod vode", "done": false, "photos": [] },
+      { "id": "av-06", "text": "Rupe u zidu pored šokera sanirati", "done": false, "photos": [] },
+      { "id": "av-07", "text": "Detaljno očistiti kuhinju: podovi / kanali / odvodi / rđa", "done": false, "photos": [] },
+      { "id": "av-08", "text": "Pri haubi srediti spojeve i skinuti krep trake", "done": false, "photos": [] },
+      { "id": "av-09", "text": "U kuhinji se oseća neprijatan miris – moguće kanalizacija/odvod", "done": false, "photos": [] },
+      { "id": "av-10", "text": "Za sve sudopere ojačati odvodne cevi na spoju u podu radi zaštite", "done": false, "photos": [] },
+      { "id": "av-11", "text": "Skinuti folije sa hauba", "done": false, "photos": [] },
+      { "id": "av-12", "text": "Servisni sto detaljno očistiti", "done": false, "photos": [] },
+      { "id": "av-13", "text": "Pločice / fugne kod salatare u hladnoj kuhinji", "done": false, "photos": [] },
+      { "id": "av-14", "text": "Popuniti spoj termo bloka sa zidom", "done": false, "photos": [] },
+      { "id": "av-15", "text": "Veliki ledomati – pri dnu uređaja očistiti mrlje/tačke od teške hemije", "done": false, "photos": [] },
+      { "id": "av-16", "text": "Ulaz u kuhinju sa strane sudopere – žuto-crveni prekidač otpao, isti takav i sa druge strane", "done": false, "photos": [] },
+      { "id": "av-17", "text": "Klizna staklena vrata – oguljen ram mehanizma", "done": false, "photos": [] },
+      { "id": "av-18", "text": "Prekidač proveriti za 30% snage ventilacije", "done": false, "photos": [] },
+      { "id": "av-19", "text": "Skratiti plastično crevo za struju u dishwasher sekciji ispod tunel mašine", "done": false, "photos": [] },
+      { "id": "av-20", "text": "Stalak za Retigo rernu okrenut naopako – okrenuti", "done": false, "photos": [] },
+      { "id": "av-21", "text": "Prskalica sa 2 crvene kapsule – zameniti zelenim", "done": false, "photos": [] },
+      { "id": "av-22", "text": "Kod levog Ansul sistema sanirati rupe u pločicama", "done": false, "photos": [] },
+      { "id": "av-23", "text": "Spojeve na termo bloku od inoxa spojiti", "done": false, "photos": [] },
+      { "id": "av-24", "text": "Frižider fioka kod motora – rešetka kriva; proveriti sve counter frižidere u kuhinji i SHOW kitchen", "done": false, "photos": [] },
+      { "id": "av-25", "text": "PP vrata kuhinjska – potrebno rešenje za oslobađanje vrata; kada su vrata otvorena, pristup dugmetu je onemogućen", "done": false, "photos": [] }
+    ]},
+    { "id": "show", "code": "SK", "name": "SHOW Kitchen", "items": [
+      { "id": "sk-01", "text": "Skinuti folije sa hauba", "done": false, "photos": [] },
+      { "id": "sk-02", "text": "Zafugovati pločice na podu", "done": false, "photos": [] },
+      { "id": "sk-03", "text": "Iverica između restorana i kuhinje – srediti", "done": false, "photos": [] },
+      { "id": "sk-04", "text": "Roštilj rđav zbog silikona", "done": false, "photos": [] },
+      { "id": "sk-05", "text": "Ukloniti smeće od alkoholnih napitaka", "done": false, "photos": [] },
+      { "id": "sk-06", "text": "Plafon zatvoriti", "done": false, "photos": [] },
+      { "id": "sk-07", "text": "Fleke od vlage na plafonima ukloniti i sanirati problem ukoliko već nije", "done": false, "photos": [] },
+      { "id": "sk-08", "text": "Ukloniti plave folije sa frižidera (kad se otvore vrata)", "done": false, "photos": [] },
+      { "id": "sk-09", "text": "Sa Ansul sistema skinuti ostatke folija i očistiti ga", "done": false, "photos": [] },
+      { "id": "sk-10", "text": "Pantry – vrata oštećena", "done": false, "photos": [] },
+      { "id": "sk-11", "text": "Staviti stoper za Pantry vrata", "done": false, "photos": [] },
+      { "id": "sk-12", "text": "Ukloniti folije sa stola", "done": false, "photos": [] },
+      { "id": "sk-13", "text": "Pločice iza frižidera u Pantry zafugovati", "done": false, "photos": [] }
+    ]}
+  ]
+}

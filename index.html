@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kitchen Snagging Lista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Punch-list sheet: sections as stacked tables, each row = code | comment + photos | status */
+:root{
+  --bg:#f3f4f5; --surface:#ffffff; --fg:#1b2024; --muted:#5d6872; --line:#d9dde1;
+  --accent:#1f5f74; --accent-soft:#e3eef2; --open:#b86e00; --open-soft:#fff3df;
+  --done:#2c7a4b; --done-soft:#e4f3ea; --danger:#b3261e; --drop:#eef5f7;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#121518; --surface:#1a1f23; --fg:#e6e9ec; --muted:#97a2ac; --line:#2c343a;
+  --accent:#6fb3c8; --accent-soft:#1d3139; --open:#f0a640; --open-soft:#33270f;
+  --done:#6cc792; --done-soft:#16301f; --danger:#f2867e; --drop:#18262c; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.45}
+img{max-width:100%}
+[hidden]{display:none!important}
+button,input,textarea{font:inherit;color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:28px;line-height:1.15;margin:6px 0 4px;text-wrap:balance;font-weight:700}
+.asof{font:500 13px/1.3 var(--mono);color:var(--muted)}
+.summary{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font:600 13px/1 var(--mono);padding:8px 10px;border-radius:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.o{background:var(--open-soft);color:var(--open)}
+.pill.d{background:var(--done-soft);color:var(--done)}
+.pill.p{background:var(--accent-soft);color:var(--accent)}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-block:10px;border-bottom:1px solid var(--line);margin-bottom:20px}
+nav.tabs a{font:500 14px/1 var(--sans);color:var(--fg);text-decoration:none;padding:9px 12px;border:1px solid var(--line);border-radius:4px;background:var(--surface);display:flex;gap:8px;align-items:center}
+nav.tabs a span{font:600 12px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+nav.tabs a:hover,nav.tabs a:focus-visible{border-color:var(--accent);outline:none}
+.tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.btn{font:500 13px/1 var(--sans);padding:8px 10px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:4px;cursor:pointer}
+.btn[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn:focus-visible,.status button:focus-visible,.drop:focus-visible,.thumb button:focus-visible,.link:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn:disabled{opacity:.6;cursor:default}
+.editbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:10px 12px;margin-bottom:16px;font-size:14px}
+.editbar b{font-weight:600}
+.save{font:600 12px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.save.err{color:var(--danger)}
+.msg{font-size:14px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:4px;padding:10px 12px;margin-bottom:16px}
+section.area{margin-bottom:36px;scroll-margin-top:72px}
+.area-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.area-head h2{margin:0;font-size:19px;font-weight:700}
+.area-head .meta{font:500 13px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.colhead,.row{display:grid;grid-template-columns:64px minmax(0,1fr) 132px;gap:0 14px}
+.colhead{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line);background:var(--bg)}
+.row{padding:14px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row.is-done{box-shadow:inset 4px 0 0 var(--done)}
+.row.is-open{box-shadow:inset 4px 0 0 var(--open)}
+.row.hide{display:none}
+.code{font:600 13px/1.6 var(--mono);color:var(--accent);font-variant-numeric:tabular-nums}
+.text{min-width:0}
+.text p{margin:0 0 10px;font-weight:500;overflow-wrap:anywhere}
+.row.is-done .text p{color:var(--muted)}
+.text textarea{width:100%;resize:vertical;min-height:44px;margin:0 0 10px;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);font-weight:500;line-height:1.4}
+.text textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.status{display:flex;flex-direction:column;gap:8px}
+.status button.st{width:100%;font:600 12px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:9px 8px;border-radius:4px;border:1px solid transparent;cursor:pointer}
+.status button.st.o{background:var(--open-soft);color:var(--open);border-color:var(--open)}
+.status button.st.d{background:var(--done-soft);color:var(--done);border-color:var(--done)}
+.status button.st:disabled{cursor:default}
+.link{background:none;border:0;padding:4px 0;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer;text-align:center}
+.link.danger{color:var(--danger)}
+.confirm-row{display:flex;gap:6px}
+.confirm-row button{flex:1;font:600 12px/1 var(--sans);padding:7px 6px;border-radius:3px;cursor:pointer;border:1px solid var(--line);background:var(--surface)}
+.confirm-row .yes{background:var(--danger);border-color:var(--danger);color:var(--surface)}
+.photos{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.thumb{position:relative;width:104px;height:104px;border-radius:4px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.thumb .x{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:3px;border:0;background:rgba(0,0,0,.6);color:#fff;font:600 15px/1 var(--sans);cursor:pointer;display:grid;place-items:center}
+.thumb .confirm{position:absolute;inset:0;background:rgba(0,0,0,.8);display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;padding:6px}
+.thumb .confirm button{font:600 12px/1 var(--sans);padding:7px 8px;border-radius:3px;border:0;cursor:pointer;width:100%}
+.thumb .confirm .yes{background:#d9463c;color:#fff}
+.thumb .confirm .no{background:#fff;color:#1b2024}
+.thumb.loading{display:grid;place-items:center;font:500 11px/1.3 var(--mono);color:var(--muted);text-align:center;padding:6px}
+.drop{min-width:104px;height:104px;flex:1 1 180px;max-width:320px;border:1.5px dashed var(--line);border-radius:4px;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;cursor:pointer;padding:8px;transition:background .15s,border-color .15s}
+.drop strong{color:var(--accent);font-weight:600}
+.drop small{font:500 11px/1.2 var(--mono)}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--drop)}
+.nophoto{font:500 12px/1 var(--mono);color:var(--muted)}
+.err{color:var(--danger);font-size:12px;margin-top:6px}
+.additem{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);background:var(--bg)}
+.additem input,.addarea input,.login input{flex:1;min-width:0;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.addarea{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:36px}
+.login{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:20px;display:grid;gap:10px}
+.login h3{margin:0;font-size:16px}
+.login ol{margin:0;padding-left:20px;color:var(--muted);font-size:14px}
+.login .r{display:flex;gap:8px;flex-wrap:wrap}
+footer{margin-top:40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:500 12px/1.4 var(--mono);color:var(--muted)}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(10,12,14,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
+.lightbox .cap{position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#fff;font:500 13px/1.3 var(--sans);padding:0 16px}
+.lightbox .close{position:absolute;top:12px;right:12px;background:#fff;color:#111;border:0;border-radius:4px;font:600 14px/1 var(--sans);padding:10px 12px;cursor:pointer}
+@media (max-width:620px){
+  h1{font-size:23px}
+  .colhead{display:none}
+  .row{grid-template-columns:52px minmax(0,1fr);grid-template-areas:"c t" "s s"}
+  .row .code{grid-area:c}.row .text{grid-area:t}.row .status{grid-area:s;margin-top:10px}
+  .thumb{width:88px;height:88px}
+  .drop{height:88px;max-width:none}
+  .tools{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Pre-opening · Kitchen snagging</div>
+      <h1 id="title">Kitchen snagging</h1>
+      <div class="asof" id="asof"></div>
+    </div>
+    <div class="summary" aria-live="polite">
+      <span class="pill o" id="sumOpen">— otvoreno</span>
+      <span class="pill d" id="sumDone">— ispravljeno</span>
+      <span class="pill p" id="sumPhotos">— foto</span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <div class="tools">
+      <button type="button" class="btn" id="fAll" aria-pressed="true">Sve</button>
+      <button type="button" class="btn" id="fOpen" aria-pressed="false">Otvoreno</button>
+      <button type="button" class="btn" id="fNoPhoto" aria-pressed="false">Bez foto</button>
+      <button type="button" class="btn" id="xlsBtn">Excel ↓</button>
+    </div>
+  </nav>
+
+  <div class="editbar" id="editbar" hidden>
+    <span><b>Režim uređivanja</b> · izmene se snimaju u repo, javni link se osvežava za ~1 min</span>
+    <span class="save" id="saveState">Sačuvano</span>
+  </div>
+
+  <form class="login" id="login" hidden>
+    <h3>Uređivanje</h3>
+    <ol>
+      <li>GitHub → Settings → Developer settings → Personal access tokens → <b>Fine-grained tokens</b> → Generate new token</li>
+      <li>Repository access: <b>Only select repositories → SNAGG</b></li>
+      <li>Permissions → Repository → <b>Contents: Read and write</b> → Generate</li>
+      <li>Nalepi token ovde. Ostaje samo u ovom browseru.</li>
+    </ol>
+    <div class="r">
+      <input type="password" id="tokenInput" placeholder="github_pat_…" autocomplete="off" aria-label="GitHub token">
+      <button type="submit" class="btn primary" id="loginBtn">Uđi u uređivanje</button>
+      <button type="button" class="btn" id="loginCancel">Otkaži</button>
+    </div>
+    <div class="err" id="loginErr" hidden></div>
+  </form>
+
+  <div class="msg" id="msg">Učitavanje…</div>
+  <div id="areas"></div>
+  <form class="addarea" id="addArea" hidden>
+    <input id="newAreaName" placeholder="Nova sekcija (npr. Banquet Kitchen)" aria-label="Naziv nove sekcije">
+    <button type="submit" class="btn primary">Dodaj sekciju</button>
+  </form>
+
+  <footer>
+    <span>Fotografije i status ažurira Executive Chef.</span>
+    <span><button type="button" class="link" id="editToggle">Uredi</button></span>
+  </footer>
+</div>
+
+<div class="lightbox" id="lb" hidden>
+  <img id="lbImg" alt="">
+  <button class="close" type="button" id="lbClose">Zatvori ✕</button>
+  <div class="cap" id="lbCap"></div>
+</div>
+<input type="file" id="picker" accept="image/*" multiple hidden>
+
+<script>
+const REPO = { owner:"djordje21", repo:"SNAGG", branch:"main" };
+const RAW = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.repo}/${REPO.branch}/`;
+const API = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/`;
+const TOKEN_KEY = "snagg-token";
+
+let data = null, dataSha = null, token = null, editing = false, filter = "all";
+const pending = {}, errors = {}, confirmDel = {}, localUrls = {};
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2,"0");
+const label = (a,i) => `${a.code}-${pad(i+1)}`;
+const store = { get(k){ try{return localStorage.getItem(k)}catch(_){return null} },
+                set(k,v){ try{localStorage.setItem(k,v)}catch(_){} },
+                del(k){ try{localStorage.removeItem(k)}catch(_){} } };
+
+/* ---------- encoding ---------- */
+function b64FromBytes(bytes){
+  let s = ""; for (let i=0;i<bytes.length;i+=0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i,i+0x8000));
+  return btoa(s);
+}
+const b64FromText = t => b64FromBytes(new TextEncoder().encode(t));
+const textFromB64 = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g,"")), c => c.charCodeAt(0)));
+
+/* ---------- GitHub API ---------- */
+async function gh(path, opts={}){
+  const res = await fetch(API + path, { ...opts, headers:{ Authorization:`Bearer ${token}`, Accept:"application/vnd.github+json", ...(opts.headers||{}) } });
+  if (!res.ok){ const e = new Error(`GitHub ${res.status}`); e.status = res.status; throw e; }
+  return res.status === 204 ? null : res.json();
+}
+let queue = Promise.resolve();
+function enqueue(fn){ const p = queue.then(fn); queue = p.catch(()=>{}); return p; }
+
+function setSave(txt, bad){ const s=$("#saveState"); s.textContent = txt; s.classList.toggle("err", !!bad); }
+
+let saveTimer = null;
+function scheduleSave(){
+  setSave("Čuva se…");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => enqueue(saveData), 1200);
+}
+async function saveData(){
+  data.updated = new Date().toISOString();
+  const body = JSON.stringify(data, null, 2) + "\n";
+  const put = sha => gh("data.json", { method:"PUT", body: JSON.stringify({ message:"Update snagging list", content:b64FromText(body), sha, branch:REPO.branch }) });
+  try{
+    let r;
+    try { r = await put(dataSha); }
+    catch(e){ if (e.status !== 409 && e.status !== 422) throw e; const cur = await gh("data.json?ref="+REPO.branch); r = await put(cur.sha); }
+    dataSha = r.content.sha;
+    setSave("Sačuvano");
+    renderAsof();
+  }catch(e){ setSave("Greška pri snimanju – pokušaj ponovo", true); throw e; }
+}
+
+/* ---------- load ---------- */
+async function loadPublic(){
+  for (const url of ["data.json?t="+Date.now(), RAW+"data.json?t="+Date.now()]){
+    try{ const r = await fetch(url, {cache:"no-store"}); if (r.ok) return r.json(); }catch(_){}
+  }
+  throw new Error("load");
+}
+async function loadForEdit(){
+  const r = await gh("data.json?ref="+REPO.branch);
+  dataSha = r.sha;
+  return JSON.parse(textFromB64(r.content));
+}
+
+/* ---------- render ---------- */
+const photoSrc = p => localUrls[p] || (editing ? RAW + p : p);
+
+function renderAsof(){
+  if (!data) return;
+  $("#title").textContent = data.title || "Kitchen snagging";
+  const d = new Date(data.updated);
+  $("#asof").textContent = isNaN(d) ? "" : "Stanje na: " + d.toLocaleString("sr-Latn-RS",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+}
+
+function buildTabs(){
+  document.querySelectorAll("#tabs a").forEach(a => a.remove());
+  const tools = $("#tabs .tools");
+  data.areas.forEach(a => {
+    const el = document.createElement("a");
+    el.href = "#" + a.id; el.id = "tab-" + a.id;
+    el.append(a.name + " ");
+    el.appendChild(document.createElement("span"));
+    $("#tabs").insertBefore(el, tools);
+  });
+}
+
+function render(){
+  if (!data) return;
+  buildTabs(); renderAsof();
+  const root = $("#areas"); root.textContent = "";
+  let open=0, done=0, photos=0;
+  data.areas.forEach(a => {
+    let aDone = 0;
+    const sec = document.createElement("section"); sec.className="area"; sec.id=a.id;
+    sec.innerHTML = `<div class="area-head"><h2></h2><span class="meta"></span></div><div class="sheet"><div class="colhead"><span>Br.</span><span>Komentar / fotografije</span><span>Status</span></div></div>`;
+    sec.querySelector("h2").textContent = a.name;
+    const sheet = sec.querySelector(".sheet");
+    a.items.forEach((it,i) => {
+      it.done ? (done++, aDone++) : open++;
+      photos += it.photos.length;
+      sheet.appendChild(renderRow(a, it, i));
+    });
+    if (editing){
+      const f = document.createElement("form"); f.className="additem";
+      f.innerHTML = `<input placeholder="Nova stavka za ${a.name}" aria-label="Nova stavka"><button class="btn primary" type="submit">Dodaj</button>`;
+      f.querySelector("input").id = "new-" + a.id;
+      f.onsubmit = e => { e.preventDefault(); const v = f.querySelector("input").value.trim(); if (!v) return;
+        a.items.push({ id:`${a.id}-${Date.now().toString(36)}`, text:v, done:false, photos:[] }); render(); scheduleSave();
+        document.getElementById("new-"+a.id)?.focus(); };
+      sheet.appendChild(f);
+    }
+    sec.querySelector(".meta").textContent = `${aDone}/${a.items.length} ispravljeno`;
+    root.appendChild(sec);
+    const tab = document.getElementById("tab-"+a.id); if (tab) tab.querySelector("span").textContent = a.items.length - aDone;
+  });
+  $("#sumOpen").textContent = `${open} otvoreno`;
+  $("#sumDone").textContent = `${done} ispravljeno`;
+  $("#sumPhotos").textContent = `${photos} foto`;
+  $("#addArea").hidden = !editing;
+}
+
+function renderRow(a, it, i){
+  const row = document.createElement("div");
+  row.className = "row " + (it.done ? "is-done" : "is-open");
+  if ((filter==="open" && it.done) || (filter==="nophoto" && (it.photos.length || pending[it.id]))) row.classList.add("hide");
+  row.innerHTML = `<div class="code"></div><div class="text"><div class="photos"></div></div><div class="status"></div>`;
+  row.querySelector(".code").textContent = label(a,i);
+  const text = row.querySelector(".text"), strip = row.querySelector(".photos"), status = row.querySelector(".status");
+
+  if (editing){
+    const ta = document.createElement("textarea"); ta.value = it.text; ta.rows = 2; ta.id = "txt-"+it.id;
+    ta.setAttribute("aria-label", "Komentar " + label(a,i));
+    ta.onchange = () => { const v = ta.value.trim(); if (v && v !== it.text){ it.text = v; scheduleSave(); } };
+    text.prepend(ta);
+  } else {
+    const p = document.createElement("p"); p.textContent = it.text; text.prepend(p);
+  }
+
+  it.photos.forEach((path, n) => {
+    const t = document.createElement("div"); t.className="thumb";
+    const img = document.createElement("img"); img.src = photoSrc(path); img.loading="lazy"; img.alt = `${label(a,i)} foto ${n+1}`;
+    img.onclick = () => openLb(img.src, `${label(a,i)} · ${it.text}`);
+    t.appendChild(img);
+    if (editing){
+      const ck = it.id + "|" + path;
+      if (confirmDel[ck]){
+        const c = document.createElement("div"); c.className="confirm";
+        c.innerHTML = `<button class="yes" type="button">Obriši</button><button class="no" type="button">Otkaži</button>`;
+        c.querySelector(".yes").onclick = () => removePhoto(it, path);
+        c.querySelector(".no").onclick = () => { delete confirmDel[ck]; render(); };
+        t.appendChild(c);
+      } else {
+        const x = document.createElement("button"); x.className="x"; x.type="button"; x.textContent="✕";
+        x.setAttribute("aria-label","Ukloni fotografiju"); x.onclick = () => { confirmDel[ck]=true; render(); };
+        t.appendChild(x);
+      }
+    }
+    strip.appendChild(t);
+  });
+  for (let p=0; p<(pending[it.id]||0); p++){ const t=document.createElement("div"); t.className="thumb loading"; t.textContent="Upload…"; strip.appendChild(t); }
+
+  if (editing){
+    const d = document.createElement("div"); d.className="drop"; d.tabIndex=0; d.setAttribute("role","button");
+    d.setAttribute("aria-label", "Dodaj fotografiju za " + label(a,i));
+    d.innerHTML = `<span><strong>Prevuci foto</strong> ili klikni</span><small>JPG · PNG</small>`;
+    d.onclick = () => pick(it);
+    d.onkeydown = e => { if (e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(it); } };
+    const over = on => d.classList.toggle("over", on);
+    row.addEventListener("dragover", e => { e.preventDefault(); over(true); });
+    row.addEventListener("dragleave", e => { if (!row.contains(e.relatedTarget)) over(false); });
+    row.addEventListener("drop", e => { e.preventDefault(); over(false); addPhotos(it, e.dataTransfer.files); });
+    strip.appendChild(d);
+  } else if (!it.photos.length){
+    const s = document.createElement("span"); s.className="nophoto"; s.textContent="Bez fotografije"; strip.appendChild(s);
+  }
+  if (errors[it.id]){ const e=document.createElement("div"); e.className="err"; e.textContent=errors[it.id]; text.appendChild(e); }
+
+  const st = document.createElement("button"); st.type="button"; st.className = "st " + (it.done ? "d" : "o");
+  st.textContent = it.done ? "✓ Ispravljeno" : "Otvoreno"; st.id = "st-"+it.id;
+  st.disabled = !editing;
+  st.onclick = () => { it.done = !it.done; render(); scheduleSave(); };
+  status.appendChild(st);
+
+  if (editing){
+    const ck = "item|" + it.id;
+    if (confirmDel[ck]){
+      const c = document.createElement("div"); c.className="confirm-row";
+      c.innerHTML = `<button type="button" class="yes">Obriši</button><button type="button">Ne</button>`;
+      c.querySelector(".yes").onclick = () => removeItem(a, it);
+      c.lastChild.onclick = () => { delete confirmDel[ck]; render(); };
+      status.appendChild(c);
+    } else {
+      const del = document.createElement("button"); del.type="button"; del.className="link danger"; del.textContent="Obriši stavku";
+      del.onclick = () => { confirmDel[ck]=true; render(); };
+      status.appendChild(del);
+    }
+  }
+  return row;
+}
+
+/* ---------- photos ---------- */
+let pickTarget = null;
+function pick(it){ pickTarget = it; const p=$("#picker"); p.value=""; p.click(); }
+$("#picker").onchange = e => { if (pickTarget) addPhotos(pickTarget, e.target.files); };
+
+function shrink(file){
+  return new Promise(resolve => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const r = Math.min(1, 1800/Math.max(img.width,img.height));
+      const c = document.createElement("canvas"); c.width=Math.round(img.width*r); c.height=Math.round(img.height*r);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url);
+      c.toBlob(b => resolve(b), "image/jpeg", 0.82);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
+async function addPhotos(it, fileList){
+  if (!editing) return;
+  const files = [...fileList].filter(f => f.type.startsWith("image/"));
+  if (!files.length){ errors[it.id] = "Prevuci fajl slike (JPG ili PNG)."; render(); return; }
+  delete errors[it.id];
+  pending[it.id] = (pending[it.id]||0) + files.length; render();
+  for (const f of files){
+    try{
+      const blob = await shrink(f);
+      if (!blob) throw new Error("decode");
+      const path = `photos/${it.id}-${Date.now().toString(36)}.jpg`;
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      await enqueue(() => gh(path, { method:"PUT", body: JSON.stringify({ message:`Photo ${it.id}`, content:b64FromBytes(bytes), branch:REPO.branch }) }));
+      localUrls[path] = URL.createObjectURL(blob);
+      it.photos.push(path);
+      scheduleSave();
+    }catch(e){
+      errors[it.id] = e.message==="decode" ? "Format nije podržan (HEIC prvo pretvori u JPG)." : "Fotografija nije sačuvana. Pokušaj ponovo.";
+    }finally{ pending[it.id]--; render(); }
+  }
+}
+
+async function deleteFile(path){
+  try{ const f = await gh(path+"?ref="+REPO.branch);
+       await gh(path, { method:"DELETE", body: JSON.stringify({ message:`Remove ${path}`, sha:f.sha, branch:REPO.branch }) }); }
+  catch(e){ if (e.status !== 404) throw e; }
+}
+
+function removePhoto(it, path){
+  delete confirmDel[it.id+"|"+path];
+  it.photos = it.photos.filter(p => p !== path);
+  render(); scheduleSave();
+  enqueue(() => deleteFile(path)).catch(() => {});
+}
+
+function removeItem(a, it){
+  delete confirmDel["item|"+it.id];
+  a.items = a.items.filter(x => x !== it);
+  render(); scheduleSave();
+  it.photos.forEach(p => enqueue(() => deleteFile(p)).catch(() => {}));
+}
+
+$("#addArea").onsubmit = e => {
+  e.preventDefault();
+  const name = $("#newAreaName").value.trim(); if (!name) return;
+  const code = (name.replace(/[^A-Za-zČĆŠŽĐčćšžđ]/g,"").slice(0,2) || "XX").toUpperCase();
+  data.areas.push({ id:"area-"+Date.now().toString(36), code, name, items:[] });
+  $("#newAreaName").value = ""; render(); scheduleSave();
+};
+
+/* ---------- edit mode ---------- */
+async function enterEdit(t){
+  token = t;
+  const res = await fetch(`https://api.github.com/repos/${REPO.owner}/${REPO.repo}`, { headers:{ Authorization:`Bearer ${t}`, Accept:"application/vnd.github+json" } });
+  if (!res.ok) throw new Error("Token nije prihvaćen. Proveri da je tačno kopiran i da nije istekao.");
+  const repo = await res.json();
+  if (!repo.permissions || !repo.permissions.push) throw new Error("Token nema pravo upisa. Uključi Contents: Read and write za SNAGG.");
+  data = await loadForEdit();
+  editing = true; store.set(TOKEN_KEY, t);
+  $("#editbar").hidden = false; $("#login").hidden = true; $("#editToggle").textContent = "Izađi iz uređivanja";
+  setSave("Sačuvano"); render();
+}
+function exitEdit(){
+  editing = false; token = null; store.del(TOKEN_KEY);
+  $("#editbar").hidden = true; $("#editToggle").textContent = "Uredi"; render();
+}
+$("#editToggle").onclick = () => {
+  if (editing) exitEdit();
+  else { $("#login").hidden = false; $("#tokenInput").focus(); $("#login").scrollIntoView({behavior:"smooth", block:"start"}); }
+};
+$("#loginCancel").onclick = () => { $("#login").hidden = true; };
+$("#login").onsubmit = async e => {
+  e.preventDefault();
+  const t = $("#tokenInput").value.trim(), err = $("#loginErr"); if (!t) return;
+  $("#loginBtn").disabled = true; err.hidden = true;
+  try { await enterEdit(t); $("#tokenInput").value = ""; }
+  catch(x){ token = null; err.textContent = x.message; err.hidden = false; }
+  finally { $("#loginBtn").disabled = false; }
+};
+window.addEventListener("beforeunload", e => { if (editing && $("#saveState").textContent !== "Sačuvano"){ e.preventDefault(); e.returnValue = ""; } });
+
+/* ---------- filters, lightbox ---------- */
+function setFilter(f){ filter=f; [["fAll","all"],["fOpen","open"],["fNoPhoto","nophoto"]].forEach(([id,v]) => $("#"+id).setAttribute("aria-pressed", String(v===f))); render(); }
+$("#fAll").onclick = () => setFilter("all");
+$("#fOpen").onclick = () => setFilter("open");
+$("#fNoPhoto").onclick = () => setFilter("nophoto");
+function openLb(src, cap){ $("#lbImg").src=src; $("#lbCap").textContent=cap; $("#lb").hidden=false; $("#lbClose").focus(); }
+function closeLb(){ $("#lb").hidden=true; $("#lbImg").removeAttribute("src"); }
+$("#lbClose").onclick = closeLb;
+$("#lb").onclick = e => { if (e.target.id==="lb") closeLb(); };
+document.addEventListener("keydown", e => { if (e.key==="Escape" && !$("#lb").hidden) closeLb(); });
+
+/* ---------- Excel export ---------- */
+function loadScript(src){ return new Promise((ok,bad) => { const s=document.createElement("script"); s.src=src; s.onload=ok; s.onerror=bad; document.head.appendChild(s); }); }
+async function exportExcel(){
+  const btn = $("#xlsBtn"); btn.disabled = true; btn.textContent = "Pravim Excel…";
+  try{
+    if (!window.ExcelJS) await loadScript("https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js");
+    const wb = new ExcelJS.Workbook(); wb.creator = "Executive Chef";
+    const ws = wb.addWorksheet("Snagging", { views:[{ state:"frozen", ySplit:1 }], pageSetup:{ orientation:"landscape", fitToPage:true, fitToWidth:1, fitToHeight:0 } });
+    const maxPhotos = Math.max(1, ...data.areas.flatMap(a => a.items.map(it => it.photos.length)));
+    ws.columns = [
+      { header:"Oznaka", width:9 }, { header:"Prostor", width:20 }, { header:"Komentar", width:55 }, { header:"Status", width:14 },
+      ...Array.from({length:maxPhotos}, (_,n) => ({ header:`Foto ${n+1}`, width:24 }))
+    ];
+    ws.getRow(1).font = { bold:true, color:{argb:"FFFFFFFF"} };
+    ws.getRow(1).fill = { type:"pattern", pattern:"solid", fgColor:{argb:"FF1F5F74"} };
+    ws.getRow(1).height = 22;
+    const IMG_H = 120;
+    for (const a of data.areas){
+      for (const [i,it] of a.items.entries()){
+        const row = ws.addRow([label(a,i), a.name, it.text, it.done ? "Ispravljeno" : "Otvoreno"]);
+        row.alignment = { vertical:"top", wrapText:true };
+        row.getCell(4).font = { bold:true, color:{ argb: it.done ? "FF2C7A4B" : "FFB86E00" } };
+        if (it.photos.length) row.height = IMG_H * 0.75 + 8;
+        for (const [n,p] of it.photos.entries()){
+          try{
+            const r = await fetch(photoSrc(p)); if (!r.ok) continue;
+            const blob = await r.blob(), bmp = await createImageBitmap(blob);
+            const k = Math.min(165 / bmp.width, IMG_H / bmp.height);
+            const ext = { width:Math.round(bmp.width*k), height:Math.round(bmp.height*k) };
+            if (bmp.close) bmp.close();
+            const id = wb.addImage({ buffer: await blob.arrayBuffer(), extension:"jpeg" });
+            ws.addImage(id, { tl:{ col:4+n+0.05, row:row.number-1+0.05 }, ext });
+          }catch(_){}
+        }
+      }
+    }
+    ws.eachRow(r => r.eachCell(c => { c.border = { bottom:{ style:"thin", color:{argb:"FFD9DDE1"} } }; }));
+    const buf = await wb.xlsx.writeBuffer();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([buf], { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+    a.download = `Kitchen-Snagging-${new Date().toISOString().slice(0,10)}.xlsx`;
+    document.body.appendChild(a); a.click(); a.remove();
+  }catch(e){ alert("Excel nije napravljen. Proveri internet vezu i pokušaj ponovo."); }
+  finally{ btn.disabled = false; btn.textContent = "Excel ↓"; }
+}
+$("#xlsBtn").onclick = exportExcel;
+
+/* ---------- boot ---------- */
+(async () => {
+  const msg = $("#msg");
+  try { data = await loadPublic(); msg.hidden = true; render(); }
+  catch(_){ msg.textContent = "Lista nije učitana. Proveri internet vezu i osveži stranicu."; return; }
+  const saved = store.get(TOKEN_KEY);
+  if (saved){ try { await enterEdit(saved); } catch(_){ token = null; store.del(TOKEN_KEY); } }
+})();
+</script>
+</body>
+</html>
