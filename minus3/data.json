@@ -2,7 +2,7 @@
   "title": "AC Hotel Belgrade Airport City — Minus 3",
   "eyebrow": "Pre-opening · Back of house snagging",
   "short": "Minus 3 Snagging",
-  "updated": "2026-10-30T10:00:00Z",
+  "updated": "2026-10-30T15:18:00Z",
   "areas": [
     {
       "id": "minus3",
@@ -13,103 +13,149 @@
           "id": "m3-01",
           "text": "Generalni komentar (sve komore): sve lajsne i panelne spojeve u komorama – pod/zid/plafon – popraviti, zadihtovati, silikonirati",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-01-1.jpg",
+            "photos/m3-01-2.jpg",
+            "photos/m3-01-3.jpg",
+            "photos/m3-01-4.jpg",
+            "photos/m3-01-5.jpg",
+            "photos/m3-01-6.jpg"
+          ]
         },
         {
           "id": "m3-02",
           "text": "Generalni komentar: zameniti sve šrafove prohromskim zbog higijenskih i sanitarnih razloga",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-02-1.jpg",
+            "photos/m3-02-2.jpg",
+            "photos/m3-02-3.jpg"
+          ]
         },
         {
           "id": "m3-03",
           "text": "Proveriti ogrebotine na zidovima",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-03-1.jpg",
+            "photos/m3-03-2.jpg",
+            "photos/m3-03-3.jpg"
+          ]
         },
         {
           "id": "m3-04",
           "text": "Sve podove (posebno FRUITS & VEGETABLES) fiksirati",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-04-1.jpg",
+            "photos/m3-04-2.jpg"
+          ]
         },
         {
           "id": "m3-05",
           "text": "Očistiti sve kanale detaljno",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-05-1.jpg"
+          ]
         },
         {
           "id": "m3-06",
           "text": "Da li se zatvara prostor iznad komora?",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-06-1.jpg"
+          ]
         },
         {
           "id": "m3-07",
           "text": "Police u Kitchen Dry Store očistiti od mrlja od hemije",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-07-1.jpg"
+          ]
         },
         {
           "id": "m3-08",
           "text": "Postaviti stopere za vrata svuda gde nisu postavljeni",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-08-1.jpg"
+          ]
         },
         {
           "id": "m3-09",
           "text": "Očistiti dihtung gume u Kitchen Prep komori",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-09-1.jpg"
+          ]
         },
         {
           "id": "m3-10",
           "text": "Kitchen Prep komora ima previše silikona koji se odvaja – pronaći bolje rešenje",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-10-1.jpg"
+          ]
         },
         {
           "id": "m3-11",
           "text": "Purchasing DRY STORE – dobro očistiti podne fugne",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-11-1.jpg"
+          ]
         },
         {
           "id": "m3-12",
           "text": "Oštećenje iza vrata – postaviti stoper za vrata",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-12-1.jpg",
+            "photos/m3-12-2.jpg"
+          ]
         },
         {
           "id": "m3-13",
           "text": "Proveriti neonsku lampu jer je uparena sa petom",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-13-1.jpg"
+          ]
         },
         {
           "id": "m3-14",
           "text": "Muška svlačionica – popraviti štok na vratima",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-14-1.jpg"
+          ]
         },
         {
           "id": "m3-15",
           "text": "Zid u svlačionicama srediti / prekrečiti",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-15-1.jpg"
+          ]
         },
         {
           "id": "m3-16",
           "text": "Toaleti za osoblje – dodati leptir ključ na brave",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-16-1.jpg"
+          ]
         },
         {
           "id": "m3-17",
           "text": "Dodati silikon na štok od toaleta",
           "done": false,
-          "photos": []
+          "photos": [
+            "photos/m3-17-1.jpg",
+            "photos/m3-17-2.jpg"
+          ]
         },
         {
           "id": "m3-18",
